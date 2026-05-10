@@ -1,21 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
 import React from "react";
+
 import {
   BrowserRouter,
   Routes,
-  Route,
+  Route
 } from "react-router-dom";
 
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 
-function Dashboard() {
-  return <h1>Dashboard</h1>;
-}
+import Dashboard from
+"./pages/Dashboard/Dashboard";
+
+import Control from
+"./pages/Control/Control";
+
+import Analytics from
+"./pages/Analytics/Analytics";
+
+import Alerts from
+"./pages/Alerts/Alerts";
 
 function App() {
+
   return (
+
     <BrowserRouter>
 
       <Routes>
@@ -35,9 +44,25 @@ function App() {
           element={<Dashboard />}
         />
 
+        <Route
+          path="/control"
+          element={<Control />}
+        />
+
+        <Route
+          path="/analytics"
+          element={<Analytics />}
+        />
+
+        <Route
+          path="/alerts"
+          element={<Alerts />}
+        />
+
       </Routes>
 
     </BrowserRouter>
+
   );
 }
 

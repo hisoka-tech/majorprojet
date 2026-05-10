@@ -1,0 +1,29 @@
+.navbar-dashboard {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  background: #0f172a;
+
+  padding: 20px 30px;
+
+  border-radius: 18px;
+}
+
+.navbar-dashboard h2 {
+  color: white;
+}
+
+.profile {
+  background: #38bdf8;
+
+  padding: 12px 18px;
+
+  border-radius: 10px;
+
+  font-weight: bold;
+}

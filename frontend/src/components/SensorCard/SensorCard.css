@@ -1,0 +1,27 @@
+.sensor-card {
+  background: #0f172a;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+  transition: 0.3s;
+}
+
+.sensor-card:hover {
+  transform: translateY(-5px);
+}
+
+.sensor-card h3 {
+  color: #38bdf8;
+
+  margin-bottom: 15px;
+}
+
+.sensor-card p {
+  color: white;
+
+  font-size: 30px;
+
+  font-weight: bold;
+}
