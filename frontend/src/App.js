@@ -70,11 +70,18 @@ function App() {
 const [online, setOnline] =
   useState(false);
 
+const [lastSeen, setLastSeen] =
+  useState(Date.now());
+
   // =====================================================
   //                  MQTT CONNECT
   // =====================================================
 
   useEffect(() => {
+
+  // ============================================
+  // MQTT CONNECT
+  // ============================================
 
   client.on("connect", () => {
 
@@ -82,33 +89,14 @@ const [online, setOnline] =
       "MQTT Connected"
     );
 
-    setOnline(true);
-
     client.subscribe(
       "home/sensors"
     );
   });
 
-  client.on("offline", () => {
-
-    console.log(
-      "MQTT Offline"
-    );
-
-    setOnline(false);
-  });
-
-  client.on("reconnect", () => {
-
-    console.log(
-      "MQTT Reconnecting"
-    );
-  });
-
-  client.on("error", () => {
-
-    setOnline(false);
-  });
+  // ============================================
+  // MQTT MESSAGE
+  // ============================================
 
   client.on(
 
@@ -126,14 +114,58 @@ const [online, setOnline] =
             message.toString()
           );
 
+        // Update sensor data
+
         setData(sensorData);
 
+        // ESP32 ONLINE
+
         setOnline(true);
+
+        // Update heartbeat
+
+        setLastSeen(
+          Date.now()
+        );
       }
     }
   );
 
-}, []);
+  // ============================================
+  // HEARTBEAT CHECK
+  // ============================================
+
+  const checkESP32 =
+
+    setInterval(() => {
+
+      const now = Date.now();
+
+      // No sensor data for 5 sec
+
+      if (
+
+        now - lastSeen > 5000
+
+      ) {
+
+        setOnline(false);
+      }
+
+    }, 1000);
+
+  // ============================================
+  // CLEANUP
+  // ============================================
+
+  return () => {
+
+    clearInterval(
+      checkESP32
+    );
+  };
+
+}, [lastSeen]);
 
   // =====================================================
   //                  LIGHT CONTROL
@@ -370,19 +402,26 @@ const [online, setOnline] =
 
       <DeviceControl
 
-        title="Fan"
+  title="Fan"
 
-        subtitle="Living Room"
+  subtitle="Living Room"
 
-        state={data.fan === "ON"}
+  state={data.fan === "ON"}
 
-        auto={data.fanAuto}
+  auto={data.fanAuto}
 
-        onToggle={toggleFan}
+  onToggle={
+    online
+      ? toggleFan
+      : null
+  }
 
-        onAutoToggle={toggleFanAuto}
-      />
-
+  onAutoToggle={
+    online
+      ? toggleFanAuto
+      : null
+  }
+/>
     </div>
   );
 }
