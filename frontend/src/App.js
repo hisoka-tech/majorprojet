@@ -47,6 +47,7 @@ const client = mqtt.connect(
 function App() {
 
   const [data, setData] =
+
     useState({
 
       temperature: 0,
@@ -59,11 +60,15 @@ function App() {
 
       light: "OFF",
 
-      fan: "OFF"
+      fan: "OFF",
+
+      lightAuto: true,
+
+      fanAuto: true
     });
 
   // =====================================================
-  //                    MQTT CONNECT
+  //                  MQTT CONNECT
   // =====================================================
 
   useEffect(() => {
@@ -80,7 +85,9 @@ function App() {
     });
 
     client.on(
+
       "message",
+
       (topic, message) => {
 
         if (
@@ -88,6 +95,7 @@ function App() {
         ) {
 
           const sensorData =
+
             JSON.parse(
               message.toString()
             );
@@ -100,7 +108,7 @@ function App() {
   }, []);
 
   // =====================================================
-  //                    LIGHT CONTROL
+  //                  LIGHT CONTROL
   // =====================================================
 
   const toggleLight = () => {
@@ -131,6 +139,30 @@ function App() {
     );
   };
 
+  // =====================================================
+  //                    AUTO MODE
+  // =====================================================
+
+  const toggleLightAuto = () => {
+
+    client.publish(
+
+      "home/light",
+
+      "AUTO"
+    );
+  };
+
+  const toggleFanAuto = () => {
+
+    client.publish(
+
+      "home/fan",
+
+      "AUTO"
+    );
+  };
+
   return (
 
     <div className="app">
@@ -150,6 +182,10 @@ function App() {
         </div>
 
       </div>
+
+      {/* ================================================= */}
+      {/*                  SENSOR SECTION                   */}
+      {/* ================================================= */}
 
       <h2 className="section-title">
         SENSOR READINGS
@@ -203,22 +239,46 @@ function App() {
 
       </div>
 
+      {/* ================================================= */}
+      {/*                APPLIANCE SECTION                  */}
+      {/* ================================================= */}
+
       <h2 className="section-title">
         APPLIANCE CONTROL
       </h2>
 
-      <DeviceControl
-        title="Light"
-        subtitle="Living Room"
-        state={data.light === "ON"}
-        onToggle={toggleLight}
-      />
+      {/* LIGHT */}
 
       <DeviceControl
-        title="Fan"
+
+        title="Light"
+
         subtitle="Living Room"
+
+        state={data.light === "ON"}
+
+        auto={data.lightAuto}
+
+        onToggle={toggleLight}
+
+        onAutoToggle={toggleLightAuto}
+      />
+
+      {/* FAN */}
+
+      <DeviceControl
+
+        title="Fan"
+
+        subtitle="Living Room"
+
         state={data.fan === "ON"}
+
+        auto={data.fanAuto}
+
         onToggle={toggleFan}
+
+        onAutoToggle={toggleFanAuto}
       />
 
     </div>
