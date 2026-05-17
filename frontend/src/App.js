@@ -6,7 +6,7 @@ import {
 
 } from "react";
 
-import axios from "axios";
+import mqtt from "mqtt";
 
 import "./App.css";
 
@@ -28,118 +28,108 @@ import {
 
 } from "react-icons/fa";
 
+// =====================================================
+//                    MQTT CLIENT
+// =====================================================
+
+const client = mqtt.connect(
+
+  "wss://de9fcc2a2c21468eb9222078177ef4fa.s1.eu.hivemq.cloud:8884/mqtt",
+
+  {
+
+    username: "sanjoykh27",
+
+    password: "YOUR_PASSWORD"
+  }
+);
+
 function App() {
 
-  const ESP32 =
-    "http://192.168.137.212";
-
   const [data, setData] =
-    useState(null);
+    useState({
 
-//   const [data, setData] =
-//   useState({
+      temperature: 0,
 
-//     temperature: 28.6,
+      ldr: 0,
 
-//     ldr: 420,
+      motion: 0,
 
-//     motion: 1,
+      gas: 0,
 
-//     gas: 120,
+      light: "OFF",
 
-//     light: "ON",
+      fan: "OFF"
+    });
 
-//     fan: "OFF"
-// });
-
-  const fetchData = async () => {
-
-    try {
-
-      const res =
-        await axios.get(
-          `${ESP32}/api/status`
-        );
-
-      setData(res.data);
-
-    } catch (err) {
-
-      console.log(err);
-    }
-  };
+  // =====================================================
+  //                    MQTT CONNECT
+  // =====================================================
 
   useEffect(() => {
 
-    fetchData();
+    client.on("connect", () => {
 
-    const interval =
-      setInterval(fetchData, 2000);
+      console.log(
+        "MQTT Connected"
+      );
 
-    return () =>
-      clearInterval(interval);
+      client.subscribe(
+        "home/sensors"
+      );
+    });
+
+    client.on(
+      "message",
+      (topic, message) => {
+
+        if (
+          topic === "home/sensors"
+        ) {
+
+          const sensorData =
+            JSON.parse(
+              message.toString()
+            );
+
+          setData(sensorData);
+        }
+      }
+    );
 
   }, []);
 
-  const toggleLight = async () => {
+  // =====================================================
+  //                    LIGHT CONTROL
+  // =====================================================
 
-  if (data.light === "ON") {
+  const toggleLight = () => {
 
-    await axios.get(
-      `${ESP32}/api/light/off`
+    client.publish(
+
+      "home/light",
+
+      data.light === "ON"
+        ? "OFF"
+        : "ON"
     );
+  };
 
-  } else {
+  // =====================================================
+  //                    FAN CONTROL
+  // =====================================================
 
-    await axios.get(
-      `${ESP32}/api/light/on`
+  const toggleFan = () => {
+
+    client.publish(
+
+      "home/fan",
+
+      data.fan === "ON"
+        ? "OFF"
+        : "ON"
     );
-  }
-
-  fetchData();
-};
-
-  const toggleFan =
-    async () => {
-
-      if (data.fan === "ON") {
-
-        await axios.get(
-          `${ESP32}/api/fan/off`
-        );
-
-      } else {
-
-        await axios.get(
-          `${ESP32}/api/fan/on`
-        );
-      }
-
-      fetchData();
-    };
-
-    const toggleLightAuto = async () => {
-
-  await axios.get(
-    `${ESP32}/api/light/auto`
-  );
-
-  fetchData();
-};
-
-const toggleFanAuto = async () => {
-
-  await axios.get(
-    `${ESP32}/api/fan/auto`
-  );
-
-  fetchData();
-};
-
-  if (!data) {
-
-    return <h1>Loading...</h1>;
-  }
+  };
 
   return (
 
@@ -154,7 +144,7 @@ const toggleFanAuto = async () => {
           </h1>
 
           <p>
-            All systems running smoothly
+            MQTT Connected
           </p>
 
         </div>
@@ -218,22 +208,18 @@ const toggleFanAuto = async () => {
       </h2>
 
       <DeviceControl
-  title="Light"
-  subtitle="Living Room"
-  state={data.light === "ON"}
-  auto={data.lightAuto}
-  onToggle={toggleLight}
-  onAutoToggle={toggleLightAuto}
-/>
+        title="Light"
+        subtitle="Living Room"
+        state={data.light === "ON"}
+        onToggle={toggleLight}
+      />
 
       <DeviceControl
-  title="Fan"
-  subtitle="Living Room"
-  state={data.fan === "ON"}
-  auto={data.fanAuto}
-  onToggle={toggleFan}
-  onAutoToggle={toggleFanAuto}
-/>
+        title="Fan"
+        subtitle="Living Room"
+        state={data.fan === "ON"}
+        onToggle={toggleFan}
+      />
 
     </div>
   );
