@@ -34,13 +34,13 @@ import {
 
 const client = mqtt.connect(
 
-  "wss://de9fcc2a2c21468eb9222078177ef4fa.s1.eu.hivemq.cloud:8884/mqtt",
+  "wss://19cfde9f5b3e4395a47af67ca465d59d.s1.eu.hivemq.cloud:8884/mqtt",
 
   {
 
-    username: "sanjoykh27",
+    username: "deepoosorai",
 
-    password: "Sanjoy@9862"
+    password: "Hisoka@987"
   }
 );
 

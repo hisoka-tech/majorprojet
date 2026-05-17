@@ -5,13 +5,12 @@
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
+// =====================================================
+//                    WIFI SETTINGS
+// =====================================================
 
-
-// const char* ssid = "DEEPOOPC";
-// const char* password = "deepoo@123";
-
-const char* ssid = "SANJOY0974";
-const char* password = "9862622104";
+const char* ssid = "DEEPOOPC";
+const char* password = "deepoo@123";
 
 
 // =====================================================
@@ -19,15 +18,15 @@ const char* password = "9862622104";
 // =====================================================
 
 const char* mqtt_server =
-"de9fcc2a2c21468eb9222078177ef4fa.s1.eu.hivemq.cloud";
+"19cfde9f5b3e4395a47af67ca465d59d.s1.eu.hivemq.cloud";
 
 const int mqtt_port = 8883;
 
 const char* mqtt_user =
-"sanjoykh27";
+"deepoosorai";
 
 const char* mqtt_password =
-"Sanjoy@9862";
+"Hisoka@987";
 
 // =====================================================
 //                    MQTT CLIENT
