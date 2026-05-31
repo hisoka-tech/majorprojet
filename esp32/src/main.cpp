@@ -9,9 +9,12 @@
 //                    WIFI SETTINGS
 // =====================================================
 
-const char* ssid = "DEEPOOPC";
-const char* password = "deepoo@123";
+// const char* ssid = "DEEPOOPC";
+// const char* password = "deepoo@123";
 
+
+const char* ssid = "sanjoy";
+const char* password = "12341234";
 
 // =====================================================
 //                    MQTT SETTINGS
@@ -64,7 +67,7 @@ DHT dht(DHT_PIN, DHT_TYPE);
 #define DARK_THRESHOLD    2200
 #define LIGHT_THRESHOLD   1800
 
-#define TEMP_THRESHOLD    29
+#define TEMP_THRESHOLD    33
 #define GAS_THRESHOLD     2500
 
 // =====================================================
@@ -95,9 +98,9 @@ bool gasDetected = false;
 //               MANUAL CONTROL STATES
 // =====================================================
 
-bool manualLight = false;
+bool manualLight = true;
 
-bool manualFan = false;
+bool manualFan = true;
 
 // =====================================================
 //                  STABLE LDR READ
