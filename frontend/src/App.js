@@ -24,7 +24,9 @@ import {
 
   FaRunning,
 
-  FaWind
+  FaWind,
+
+  FaTint
 
 } from "react-icons/fa";
 
@@ -48,24 +50,28 @@ function App() {
 
   const [data, setData] =
 
-  useState({
+useState({
 
-    temperature: 0,
+  temperature: 0,
 
-    ldr: 0,
+  humidity: 0,
 
-    motion: 0,
+  ldr: 0,
 
-    gas: 0,
+  motion: 0,
 
-    light: "OFF",
+  gas: 0,
 
-    fan: "OFF",
+  light: "OFF",
 
-    lightAuto: true,
+  fan: "OFF",
 
-    fanAuto: true
-  });
+  autoLight: "OFF",
+
+  lightAuto: true,
+
+  fanAuto: true
+});
 
 const [online, setOnline] =
   useState(false);
@@ -328,6 +334,14 @@ const [lastSeen, setLastSeen] =
         />
 
         <SensorCard
+          title="Humidity"
+          value={`${data.humidity}%`}
+          status="NORMAL"
+          color="#0ea5e9"
+          icon={<FaTint />}
+        />
+
+        <SensorCard
           title="Light Intensity"
           value={data.ldr}
           status={
@@ -338,6 +352,18 @@ const [lastSeen, setLastSeen] =
           color="#facc15"
           icon={<FaLightbulb />}
         />
+
+        <SensorCard
+  title="Street Light"
+  value={data.autoLight}
+  status={
+    data.autoLight === "ON"
+      ? "DARK"
+      : "BRIGHT"
+  }
+  color="#f59e0b"
+  icon={<FaLightbulb />}
+/>
 
         <SensorCard
           title="Motion Status"

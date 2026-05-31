@@ -45,6 +45,7 @@ PubSubClient client(espClient);
 
 #define LIGHT_RELAY_PIN   22
 #define FAN_RELAY_PIN     23
+#define AUTO_LIGHT_RELAY  27
 
 #define PIR_PIN           18
 
@@ -282,6 +283,11 @@ void setup() {
     );
 
     pinMode(
+        AUTO_LIGHT_RELAY,
+        OUTPUT
+    );
+
+    pinMode(
         PIR_PIN,
         INPUT
     );
@@ -306,6 +312,11 @@ void setup() {
 
     digitalWrite(
         FAN_RELAY_PIN,
+        LOW
+    );
+
+    digitalWrite(
+        AUTO_LIGHT_RELAY,
         LOW
     );
 
@@ -391,6 +402,9 @@ void loop() {
 
     float temperature =
         dht.readTemperature();
+
+    float humidity =
+        dht.readHumidity();
 
     // =================================================
     //                DARK/BRIGHT STABILITY
@@ -497,6 +511,22 @@ void loop() {
             );
     }
 
+
+    // =================================================
+    //          AUTO DARK BULB (NEW RELAY)
+    // =================================================
+
+    // LDR values above DARK_THRESHOLD mean darkness
+
+    digitalWrite(
+
+         AUTO_LIGHT_RELAY,
+
+         darkState ? LOW : HIGH
+
+    );
+
+
     // =================================================
     //                 RELAY CONTROL
     // =================================================
@@ -529,6 +559,10 @@ void loop() {
     sensorJson += String(temperature);
     sensorJson += ",";
 
+    sensorJson += "\"humidity\":";
+    sensorJson += String(humidity);
+    sensorJson += ",";
+
     sensorJson += "\"ldr\":";
     sensorJson += String(ldrValue);
     sensorJson += ",";
@@ -548,6 +582,10 @@ void loop() {
     sensorJson += "\"fan\":\"";
     sensorJson += fanState ? "ON" : "OFF";
     sensorJson += "\",";
+
+    sensorJson += "\"autoLight\":\"";
+sensorJson += (darkState ? "ON" : "OFF");
+sensorJson += "\",";
 
     sensorJson += "\"lightAuto\":";
     sensorJson += manualLight ? "false" : "true";
