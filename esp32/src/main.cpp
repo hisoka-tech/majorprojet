@@ -9,11 +9,11 @@
 //                    WIFI SETTINGS
 // =====================================================
 
- const char* ssid = "ESP32";
- const char* password = "12345678";
+//  const char* ssid = "ESP32";
+//  const char* password = "12345678";
 
-
-
+const char* ssid = "DEEPOOPC";
+const char* password = "deepoo@123";
 
 // =====================================================
 //                    MQTT SETTINGS
