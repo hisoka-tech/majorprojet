@@ -405,6 +405,16 @@ void loop() {
     float humidity =
         dht.readHumidity();
 
+    if (isnan(temperature)) {
+        Serial.println("Temperature read failed!");
+        temperature = 0;
+    }
+
+    if (isnan(humidity)) {
+        Serial.println("Humidity read failed!");
+        humidity = 0;
+    }
+
     // =================================================
     //                DARK/BRIGHT STABILITY
     // =================================================
@@ -510,6 +520,7 @@ void loop() {
             );
     }
 
+// ytdivhdohdccshcvcosjch jjbc vhoj hjjbhhsdbj vhhjnbc hnjsdhjnhnjbch n  bjhkj   c njkjcnjnjk
 
     // =================================================
     //          AUTO DARK BULB (NEW RELAY)
@@ -598,6 +609,8 @@ sensorJson += "\",";
     // =================================================
     //               PUBLISH SENSORS
     // =================================================
+
+    Serial.println(sensorJson);
 
     client.publish(
 

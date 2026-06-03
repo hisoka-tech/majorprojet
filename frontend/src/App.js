@@ -114,11 +114,20 @@ const [lastSeen, setLastSeen] =
         topic === "home/sensors"
       ) {
 
-        const sensorData =
+        let sensorData = null;
 
-          JSON.parse(
+        try {
+          sensorData = JSON.parse(
             message.toString()
           );
+        } catch (error) {
+          console.error(
+            "Invalid JSON in MQTT message:",
+            message.toString(),
+            error
+          );
+          return;
+        }
 
         // Update sensor data
 
